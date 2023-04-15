@@ -1,6 +1,15 @@
 const express = require('express');
 const mysql = require('mysql');
 const methodOverride = require('method-override');
+require ('express-ws')(app);
+
+//web socket endpoint
+app.ws('/ws', function(ws, req) {
+    ws.on('message', function(msg) {
+        console.log(msg);
+    });
+    console.log('socket', req.testing);
+});
 
 
 const app = express();
