@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Edit <%= movie.title %></title>
+  <style>
+    /* CSS styles here */
+  </style>
+</head>
+<body>
+  <h1>Edit <%= movie.title %></h1>
+  <form action="/movies/<%= movie.id %>?_method=PUT" method="POST">
+    <div>
+      <label for="title">Title:</label>
+      <input type="text" id="title" name="title" value="<%= movie.title %>">
+    </div>
+    <div>
+      <label for="director">Director:</label>
+      <input type="text" id="director" name="director" value="<%= movie.director %>">
+    </div>
+    <div>
+      <label for="year">Year:</label>
+      <input type="number" id="year" name="year" value="<%= movie.year %>">
+    </div>
+    <div>
+      <label for="actors">Actors:</label>
+      <% movie.actors.forEach(function(actor) { %>
+        <input type="text" id="actors" name="actors" value="<%= actor.name %>">
+      <% }); %>
+    </div>
+    <button type="submit">Save Changes</button>
+  </form>
+  <a href="/movies/<%= movie.id %>">Cancel</a>
+</body>
+</html>

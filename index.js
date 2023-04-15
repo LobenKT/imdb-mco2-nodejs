@@ -101,6 +101,88 @@ const connection = mysql.createConnection({
       res.redirect("/");
     });
   });
+// CRUD ROUTES
+// Route to display all movies
+app.get('/movies', (req, res) => {
+    // Code to retrieve all movies from database and render the "index.ejs" template
+    res.render('index');
+ });
+
+// Route to display a form for adding a new movie
+app.get('/movies/new', (req, res) => {
+    // Code to render the "new.ejs" template
+    res.render('new');
+  });
+  
+  // Route to handle adding a new movie
+  app.post('/movies', (req, res) => {
+    // Code to add new movie to database and redirect to "/movies"
+   const { title, director, year } = req.body;
+  const actors = req.body.actors.split(',');
+
+  // Insert new movie into database
+  connection.query('INSERT INTO nodepadawan (title, director, year) VALUES (?, ?, ?)', [title, director, year], (error, results, fields) => {
+    if (error) throw error;
+
+    const movieId = results.insertId;
+
+    // Associate actors with movie
+    const values = actors.map(actor => [movieId, actor.trim()]);
+    connection.query('INSERT INTO movies_actors (movie_id, actor_name) VALUES ?', [values], (error, results, fields) => {
+      if (error) throw error;
+
+      // Redirect to movie list page
+      res.redirect('/movies');
+    });
+  });
+});
+  
+  // Route to display a single movie
+  app.get('/movies/:id', (req, res) => {
+    // Code to retrieve a single movie from the database and render the "movie.ejs" template
+
+  });
+  
+  // Route to display a form for editing a movie
+  app.get('/movies/:id/edit', (req, res) => {
+    // Code to retrieve a single movie from the database and render the "edit.ejs" template
+    const id = req.params.id;
+    const sql = "SELECT * FROM nodepadawan WHERE id = ?";
+  
+    connection.query(sql, [id], (err, results) => {
+      if (err) throw err;
+  
+      const movie = results[0];
+      res.render('edit', { movie });
+    });
+  });
+  
+// Route to handle updating a movie
+app.put('/movies/:id', (req, res) => {
+    const id = req.params.id;
+    const { title, director, year, actors } = req.body;
+    const sql = "UPDATE nodepadawan SET title = ?, director = ?, year = ?, actors = ? WHERE id = ?";
+  
+    connection.query(sql, [title, director, year, actors, id], (err, results) => {
+      if (err) throw err;
+  
+      res.redirect(`/movies/${id}`);
+    });
+  });
+  
+  // Route to handle deleting a movie
+  app.delete('/movies/:id', (req, res) => {
+    const id = req.params.id;
+    const sql = "DELETE FROM nodepadawan WHERE id = ?";
+  
+    connection.query(sql, [id], (err, results) => {
+      if (err) throw err;
+  
+      res.redirect('/movies');
+    });
+  });
+  
+
 app.listen(3000, () => {
     console.log('Server started on port 3000');
 });

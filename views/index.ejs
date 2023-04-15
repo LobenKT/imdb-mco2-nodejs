@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>IMDB Movie Database</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #F0F0F0;
+      color: #333;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 20px 0;
+      background-color: #FFF;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #444;
+      color: #FFF;
+    }
+    tr:nth-child(even) {
+      background-color: #F0F0F0;
+    }
+  </style>
+</head>
+<body>
+  <h1>IMDB Movies Dataset</h1>
+  <h2>Developed by: Tipan, Abalos, Bondoc, Tahmic</h2>
+  <h3>Powered by: Node.js and Google Cloud</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Director</th>
+        <th>Year</th>
+        <th>Actor(s)</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% movies.forEach(function(movie) { %>
+        <tr>
+          <td><%= movie.title %></td>
+          <td><%= movie.director %></td>
+          <td><%= movie.year %></td>
+          <td>
+            <% if (movie.actors) { %>
+              <% movie.actors.forEach(function(actor) { %>
+                <%= actor.name %><br>
+              <% }); %>
+            <% } %>
+          </td>
+          <td>
+            <a href="/movies/<%= movie.id %>">View</a>
+            <a href="/movies/<%= movie.id %>/edit">Edit</a>
+            <form action="/movies/<%= movie.id %>?_method=DELETE" method="POST">
+              <button type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+  <a href="/movies/new">Add New Movie</a>
+</body>
+</html>
