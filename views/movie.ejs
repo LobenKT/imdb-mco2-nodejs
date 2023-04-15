@@ -11,9 +11,11 @@
 <p><strong>Year:</strong> <%= movie.year %></p>
 <p><strong>Actors:</strong></p>
 <ul>
+  <% if (movie.actors) { %>
   <% movie.actors.forEach(function(actor) { %>
     <li><%= actor.name %></li>
   <% }); %>
+  <% } %>
 </ul>
 <a href="/movies/<%= movie.id %>/edit" class="btn btn-primary">Edit</a>
 <form action="/movies/<%= movie.id %>" method="POST">
