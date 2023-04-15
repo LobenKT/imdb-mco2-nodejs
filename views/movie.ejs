@@ -6,11 +6,11 @@
   </head>
   <body>
 <!-- movie.ejs -->
-<h1><%= movie.title %></h1>
-<p><strong>Genre:</strong><%= movie.genre %></p>
-<p><strong>Director:</strong> <%= movie.director %></p>
-<p><strong>Actors:</strong><%= movie.actor %></p>
-<p><strong>Year:</strong> <%= movie.year %></p>
+<h1><%= movie[0].title %></h1>
+<p><strong>Genre: </strong><%= movie[0].genre %></p>
+<p><strong>Director: </strong> <%= movie[0].director %></p>
+<p><strong>Actors: </strong><%= movie[0].actor %></p>
+<p><strong>Year: </strong> <%= movie[0].year %></p>
 
 <a href="/movies/<%= movie.id %>/edit" class="btn btn-primary">Edit</a>
 <form action="/movies/<%= movie.id %>" method="POST">
