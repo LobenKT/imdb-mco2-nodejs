@@ -1,10 +1,21 @@
 # imdb-mco2-nodejs
 CRUD Nodejs Application with MYSQL
+### Tech Stack used for this project
+- Node.js
+- Express.js
+- MySQL
+- Google Cloud
+
+# Prerequisites
+- Node.js
+- MySQL
+
 
 # Running the Application
 1. Clone the repository
 2. Run npm install
 3. Run npm start
+3a. Try running node.js with the following command: node app.js
 4. Open http://localhost:3000
 
 # Running the Application with Docker

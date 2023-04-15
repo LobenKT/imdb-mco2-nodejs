@@ -24,12 +24,14 @@
     </div>
     <div>
       <label for="actors">Actors:</label>
+        <% if (movie.actors) { %>
       <% movie.actors.forEach(function(actor) { %>
         <input type="text" id="actors" name="actors" value="<%= actor.name %>">
       <% }); %>
+        <% } %>
     </div>
     <button type="submit">Save Changes</button>
   </form>
-  <a href="/movies/<%= movie.id %>">Cancel</a>
+  <a href="/index/<%= movie.id %>">Cancel</a>
 </body>
 </html>

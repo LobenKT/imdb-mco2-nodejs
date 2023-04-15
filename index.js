@@ -1,11 +1,12 @@
 const express = require('express');
 const mysql = require('mysql');
+const methodOverride = require('method-override');
 
 
 const app = express();
 
 //app.use(express.static(path.join(__dirname, '/index.html')));
-
+app.use(methodOverride('_method'));
 // Set up the MySQL database connection
 const connection = mysql.createConnection({
     host: "34.126.93.124",

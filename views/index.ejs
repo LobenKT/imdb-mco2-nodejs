@@ -60,6 +60,7 @@
             <a href="/movies/<%= movie.id %>">View</a>
             <a href="/movies/<%= movie.id %>/edit">Edit</a>
             <form action="/movies/<%= movie.id %>?_method=DELETE" method="POST">
+              <input type="hidden" name="_method" value="DELETE">
               <button type="submit">Delete</button>
             </form>
           </td>
