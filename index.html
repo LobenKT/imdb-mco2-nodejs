@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMDB MCO2</title>
+</head>
+<body>
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Movie Database</title>
+      </head>
+      <body>
+        <h1>Movie Database</h1>
+    
+        <!-- Form for creating a new movie record -->
+        <h2>Add a New Movie</h2>
+        <form method="POST" action="/movies">
+          <label>Title</label>
+          <input type="text" name="title" required /><br />
+    
+          <label>Director</label>
+          <input type="text" name="director" required /><br />
+    
+          <label>Year</label>
+          <input type="number" name="year" required /><br />
+    
+          <input type="submit" value="Add Movie" />
+        </form>
+    
+        <!-- Table for displaying the list of movies -->
+        <h2>List of Movies</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Director</th>
+              <th>Year</th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Loop through the list of movies and display them as rows in the table -->
+            <% movies.forEach(function(movie) { %>
+            <tr>
+              <td><%= movie.title %></td>
+              <td><%= movie.director %></td>
+              <td><%= movie.year %></td>
+              <td><a href="/movies/<%= movie.id %>/edit">Edit</a></td>
+              <td>
+                <form method="POST" action="/movies/<%= movie.id %>?_method=DELETE">
+                  <input type="submit" value="Delete" />
+                </form>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+    
+        <!-- Form for editing an existing movie record -->
+        <h2>Edit Movie</h2>
+        <form method="POST" action="/movies/<%= movie.id %>?_method=PUT">
+          <label>Title</label>
+          <input type="text" name="title" value="<%= movie.title %>" required /><br />
+    
+          <label>Director</label>
+          <input type="text" name="director" value="<%= movie.director %>" required /><br />
+    
+          <label>Year</label>
+          <input type="number" name="year" value="<%= movie.year %>" required /><br />
+    
+          <input type="submit" value="Save Changes" />
+        </form>
+      </body>
+    </html>
+    
+    <script src="index.js"></script>
+</body>
+</html>

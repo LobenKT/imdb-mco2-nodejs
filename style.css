@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@100&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow&display=swap');
+
+html, body {
+    overflow: auto;
+}
+#add {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    border-radius: 10%;
+    border-color: lightgray;
+    color: black;
+}
+
+#delete {
+    border-radius: 100%;
+    border-color: lightgray;
+}
+
+.header {
+    padding-left: 10px;
+    padding-top: 10px;
+    align-items: center;
+}
+
+#item1 {
+    display: inline-block;
+}
+
+#item2 {
+    display: block;
+    float: right;
+    padding-top: 35px;
+    padding-right: 40px;
+}
+
+#selection {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-size: 25px;
+    color: #9114ff;
+    border: none;
+}
+
+#search {
+    padding-top: 25px;
+    padding-bottom: 25px;
+    padding-right: 40px;
+    float: right;
+}
+
+#search input {
+    height: 25px;
+    width: 200px;
+}
+
+#data {
+    padding-top: 25px;
+}
+
+table, th, td, tr{
+    border: none;
+    table-layout: fixed;
+    width: 95%;
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    color: #9114ff;
+}
+
+th{
+    font-family: 'Barlow', sans-serif;  
+}
+
+tr:nth-child(even) {
+    background-color: rgb(220, 220, 220);
+}
+
+tr input{
+    width: 200px;
+    border: 0px;
+}
+

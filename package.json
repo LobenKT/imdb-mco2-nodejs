@@ -1,0 +1,25 @@
+{
+  "name": "imdb-mco2-nodejs",
+  "version": "1.0.0",
+  "description": "CRUD Nodejs Application with MYSQL",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LobenKT/imdb-mco2-nodejs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LobenKT/imdb-mco2-nodejs/issues"
+  },
+  "homepage": "https://github.com/LobenKT/imdb-mco2-nodejs#readme",
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "mysql": "^2.18.1"
+  }
+}
