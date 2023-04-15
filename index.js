@@ -78,7 +78,8 @@ const connection = mysql.createConnection({
         console.log("Error retrieving movie:", err);
         return;
       }
-      res.render("movie", { movie: results });
+      res.render("movie", { movie: result });
+      console.log(result);
     });
   });
   
