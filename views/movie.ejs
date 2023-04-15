@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title><%= movie.title %></title>
+  </head>
+  <body>
+<!-- movie.ejs -->
+<h1><%= movie.title %></h1>
+<p><strong>Director:</strong> <%= movie.director %></p>
+<p><strong>Year:</strong> <%= movie.year %></p>
+<p><strong>Actors:</strong></p>
+<ul>
+  <% movie.actors.forEach(function(actor) { %>
+    <li><%= actor.name %></li>
+  <% }); %>
+</ul>
+<a href="/movies/<%= movie.id %>/edit" class="btn btn-primary">Edit</a>
+<form action="/movies/<%= movie.id %>" method="POST">
+  <input type="hidden" name="_method" value="DELETE">
+  <button type="submit" class="btn btn-danger">Delete</button>
+</form>
+
+  </body>
+</html>

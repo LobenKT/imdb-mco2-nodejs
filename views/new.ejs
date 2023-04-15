@@ -5,6 +5,29 @@
   <title>New Movie</title>
   <style>
     /* CSS styles here */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #F0F0F0;
+      color: #333;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 20px 0;
+      background-color: #FFF;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #444;
+      color: #FFF;
+    }
+    tr:nth-child(even) {
+      background-color: #F0F0F0;
+    }
   </style>
 </head>
 <body>
@@ -28,6 +51,6 @@
     </div>
     <button type="submit">Create Movie</button>
   </form>
-  <a href="/index">Cancel</a>
+  <a href="/movies">Cancel</a>
 </body>
 </html>

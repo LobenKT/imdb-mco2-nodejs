@@ -140,9 +140,18 @@ app.get('/movies/new', (req, res) => {
   
   // Route to display a single movie
   app.get('/movies/:id', (req, res) => {
-    // Code to retrieve a single movie from the database and render the "movie.ejs" template
-
+  // Code to retrieve a single movie from the database and render the "movie.ejs" template
+  Movie.findById(req.params.id, (err, movie) => {
+    if (err) {
+      console.error(err);
+      res.sendStatus(500);
+    } else if (!movie) {
+      res.sendStatus(404);
+    } else {
+      res.render('movie', { movie: movie });
+    }
   });
+});
   
   // Route to display a form for editing a movie
   app.get('/movies/:id/edit', (req, res) => {
