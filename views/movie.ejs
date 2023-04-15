@@ -7,16 +7,11 @@
   <body>
 <!-- movie.ejs -->
 <h1><%= movie.title %></h1>
+<p><strong>Genre:</strong><%= movie.genre %></p>
 <p><strong>Director:</strong> <%= movie.director %></p>
+<p><strong>Actors:</strong><%= movie.actor %></p>
 <p><strong>Year:</strong> <%= movie.year %></p>
-<p><strong>Actors:</strong></p>
-<ul>
-  <% if (movie.actors) { %>
-  <% movie.actors.forEach(function(actor) { %>
-    <li><%= actor.name %></li>
-  <% }); %>
-  <% } %>
-</ul>
+
 <a href="/movies/<%= movie.id %>/edit" class="btn btn-primary">Edit</a>
 <form action="/movies/<%= movie.id %>" method="POST">
   <input type="hidden" name="_method" value="DELETE">
