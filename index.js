@@ -1,7 +1,7 @@
 const express = require('express');
 const mysql = require('mysql');
 const methodOverride = require('method-override');
-require ('express-ws')(app);
+/*require ('express-ws')(app);
 
 //web socket endpoint
 app.ws('/ws', function(ws, req) {
@@ -10,7 +10,7 @@ app.ws('/ws', function(ws, req) {
     });
     console.log('socket', req.testing);
 });
-
+*/
 
 const app = express();
 
