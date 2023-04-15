@@ -12,7 +12,7 @@
 <p><strong>Actors: </strong><%= movie[0].actor %></p>
 <p><strong>Year: </strong> <%= movie[0].year %></p>
 
-<a href="/movies/<%= movie.id %>/edit" class="btn btn-primary">Edit</a>
+<a href="/movies/<%= movie[0].id %>/edit" class="btn btn-primary">Edit</a>
 <form action="/movies/<%= movie.id %>" method="POST">
   <input type="hidden" name="_method" value="DELETE">
   <button type="submit" class="btn btn-danger">Delete</button>

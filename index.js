@@ -79,7 +79,6 @@ const connection = mysql.createConnection({
         return;
       }
       res.render("movie", { movie: result });
-      console.log(result);
     });
   });
   
