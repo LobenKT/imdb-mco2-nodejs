@@ -1,6 +1,10 @@
 const express = require('express');
 const mysql = require('mysql');
 const methodOverride = require('method-override');
+const http = require('http');
+const path = require('path');
+
+
 /*require ('express-ws')(app);
 
 //web socket endpoint
@@ -14,6 +18,10 @@ app.ws('/ws', function(ws, req) {
 
 const bodyParser = require("body-parser");
 const app = express();
+const server = http.createServer(app)
+server.use(express.static(path.join(__dirname, '/index.html')));
+
+
 
 //app.use(express.static(path.join(__dirname, '/index.html')));
 app.use(express.urlencoded({ extended: true }));
