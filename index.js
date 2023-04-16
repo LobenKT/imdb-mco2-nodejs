@@ -174,7 +174,8 @@ app.get("/", (req, res) => {
   // Read a single movie
   app.get("/movies/:id", (req, res) => {
     const { id } = req.params;
-    const connection = choosePool(undefined); // Pass undefined to choosePool to use pool1 by default
+    const { year } = req.query; // Extract the "year" value from query parameters
+    const connection = choosePool(year);
     const query = "SELECT * FROM nodepadawan WHERE id = ?";
     connection.query(query, [id], (err, result) => {
       if (err) {
