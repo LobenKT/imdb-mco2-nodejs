@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Movie Search Results</title>
+    <style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #F0F0F0;
+    color: #333;
+    text-align: center;
+  }
+      table {
+        margin: auto;
+        border-collapse: collapse;
+        width: 75%;
+      }
+      th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    button {
+    display: block;
+    margin: auto;
+    }
+    </style>
+  </head>
+  <body>
+    <h1>Movie Search Results</h1>
+    <table>
+      <tr>
+        <th>Title</th>
+        <th>Genre</th>
+        <th>Director</th>
+        <th>Actor</th>
+        <th>Year</th>
+        <th>Edit</th>
+        <th>Delete</th>
+      </tr>
+      <% movies.forEach(function(movie) { %>
+        <tr>
+          <td><%= movie.title %></td>
+          <td><%= movie.genre %></td>
+          <td><%= movie.director %></td>
+          <td><%= movie.actor %></td>
+          <td><%= movie.year %></td>
+          <td><a href="/movies/<%= movie.id %>/edit">Edit</a></td>
+          <td>            
+            <form action="/movies/<%= movie.id %>?_method=DELETE" method="POST">
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit">Delete</button>
+          </form></td>
+        </tr>
+      <% }); %>
+    </table>
+    <br>
+    <button onclick="location.href='/';" type="button">Back to Home</button>
+  </body>
+</html>

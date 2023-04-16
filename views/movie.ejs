@@ -4,18 +4,84 @@
     <meta charset="utf-8">
     <title><%= movie.title %></title>
   </head>
+  <style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #F0F0F0;
+    color: #333;
+    text-align: center ;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+    background-color: #FFF;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  }
+  th, td {
+    padding: 10px;
+    text-align: left;
+  }
+  th {
+    background-color: #444;
+    color: #FFF;
+  }
+  tr:nth-child(even) {
+    background-color: #F0F0F0;
+  }
+form {
+    display: inline-block;
+    margin: 0 auto;
+    border-spacing: 1px;
+  }
+  
+  form label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  
+  form input[type="text"] {
+    display: table-cell;
+    padding: 5px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  form button[type="submit"] {
+    display: table-cell;
+    padding: 8px 16px;
+    font-size: 9px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 2px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  form button[type="submit"]:hover {
+    background-color: #0062cc;
+  }
+  form#search-form {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+  </style>
   <body>
-<!-- movie.ejs -->
+<!-- view movie.ejs -->
 <h1><%= movie[0].title %></h1>
 <p><strong>Genre: </strong><%= movie[0].genre %></p>
 <p><strong>Director: </strong> <%= movie[0].director %></p>
 <p><strong>Actors: </strong><%= movie[0].actor %></p>
 <p><strong>Year: </strong> <%= movie[0].year %></p>
 
-<a href="/movies/<%= movie.id %>/edit" class="btn btn-primary">Edit</a>
-<form action="/movies/<%= movie.id %>" method="POST">
+
+<a href="/movies/<%= movie.id %>/edit">Edit</a>
+<form action="/movies/<%= movie.id %>?_method=DELETE" method="POST">
   <input type="hidden" name="_method" value="DELETE">
-  <button type="submit" class="btn btn-danger">Delete</button>
+  <button type="submit">Delete</button>
 </form>
 
   </body>

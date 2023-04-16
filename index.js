@@ -12,10 +12,14 @@ app.ws('/ws', function(ws, req) {
 });
 */
 
+const bodyParser = require("body-parser");
 const app = express();
 
 //app.use(express.static(path.join(__dirname, '/index.html')));
+app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+app.use(bodyParser.urlencoded({ extended: true }));
+
 // Set up the MySQL database connection
 const connection = mysql.createConnection({
     host: "34.126.93.124",
@@ -54,8 +58,32 @@ const connection = mysql.createConnection({
       res.render("index", { movies: results });
     });
   });
-  
+  //search route
+  app.post('/search', (req, res) => {
+    const query = 'SELECT * FROM nodepadawan WHERE title LIKE ? OR genre LIKE ? OR director LIKE ? OR actor LIKE ? OR year LIKE ?';
+    const searchQuery = `%${req.body.query}%`;
+    connection.query(query, [searchQuery, searchQuery, searchQuery, searchQuery, searchQuery], (err, results) => {
+      if (err) {
+        console.log('Error searching movies:', err);
+        return;
+      }
+      res.render('search', { movies: results });
+    });
+  });
+
   // Create a new movie
+  app.post('/addmovie', (req, res) => {
+    const { title, genre, director, actor, year } = req.body;
+    const query = 'INSERT INTO nodepadawan (title, genre, director, actor, year) VALUES (?, ?, ?, ?, ?)';
+    connection.query(query, [title, genre, director, actor, year], (err, result) => {
+      if (err) {
+        console.log('Error adding movie:', err);
+        res.redirect('/');
+        return;
+      }
+      res.redirect('/');
+    });
+  });
   app.post("/movies", (req, res) => {
     const { title, director, year } = req.body;
     const query = "INSERT INTO nodepadawan (title, director, year) VALUES (?, ?, ?)";
@@ -63,12 +91,13 @@ const connection = mysql.createConnection({
       if (err) {
         console.log("Error creating movie:", err);
         return;
+      } else {
+        req.session.message = 'Movie added successfully!';
       }
-  
-      res.redirect("/");
+      res.redirect('/');
     });
   });
-  
+   
   // Read a single movie
   app.get("/movies/:id", (req, res) => {
     const { id } = req.params;
