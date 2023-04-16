@@ -1,43 +1,111 @@
 const express = require('express');
 const mysql = require('mysql');
 const methodOverride = require('method-override');
-/*require ('express-ws')(app);
+const async = require('async');
 
-//web socket endpoint
-app.ws('/ws', function(ws, req) {
-    ws.on('message', function(msg) {
-        console.log(msg);
-    });
-    console.log('socket', req.testing);
-});
-*/
-
-const bodyParser = require("body-parser");
 const app = express();
 
-//app.use(express.static(path.join(__dirname, '/index.html')));
-app.use(express.urlencoded({ extended: true }));
-app.use(methodOverride('_method'));
-app.use(bodyParser.urlencoded({ extended: true }));
+// Create pool for node1
+const pool1 = mysql.createPool({
+  host: "34.101.51.180",
+  user: "root",
+  password: "",
+  database: "imdbnode1",
+});
 
-// Set up the MySQL database connection
-const connection = mysql.createConnection({
-    host: "34.126.93.124",
-    user: "root",
-    password: "",
-    database: "imdbnode1",
+// Create pool for node2
+const pool2 = mysql.createPool({
+  host: "34.101.237.61",
+  user: "root",
+  password: "",
+  database: "imdbnode1",
+});
+
+// Create pool for node3
+const pool3 = mysql.createPool({
+  host: "34.101.160.29",
+  user: "root",
+  password: "",
+  database: "imdbnode1",
+});
+
+// Define a function to get a connection from a pool
+const getConnectionFromPool = (pool) => {
+  return new Promise((resolve, reject) => {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(connection);
+      }
+    });
   });
-  
-  connection.connect((err) => {
-    if (err) {
-      console.log("Error connecting to database:", err);
-      return;
+};
+
+// Connect to pools sequentially, and if pool1 fails, connect to pool2 and pool3
+const connectToAllPools = async () => {
+  try {
+    const connectedPool1 = await getConnectionFromPool(pool1);
+    console.log('Connected to pool1!');
+    connectedPool1.release();
+  } catch (err) {
+    console.error('Error connecting to pool1:', err);
+    console.log('Connecting to pool2 and pool3...');
+    try {
+      const connectedPool2 = await getConnectionFromPool(pool2);
+      console.log('Connected to pool2!');
+      connectedPool2.release();
+    } catch (err) {
+      console.error('Error connecting to pool2:', err);
     }
-  
-    console.log("Connected to database!");
-  });
-  
-  // Set up the app to use EJS templating engine
+    try {
+      const connectedPool3 = await getConnectionFromPool(pool3);
+      console.log('Connected to pool3!');
+      connectedPool3.release();
+    } catch (err) {
+      console.error('Error connecting to pool3:', err);
+    }
+  }
+};
+
+// Connect to all pools
+connectToAllPools();
+
+// Define a function to choose pool based on availability and year column value
+const choosePool = (year) => {
+  if (year === undefined) {
+    // If no year parameter is passed, use pool1 by default
+    return pool1;
+  } else if (year < 1980) {
+    // If year < 1980, use pool2
+    if (pool2._allConnections.length > 0) {
+      // If pool2 has connections, use pool2
+      return pool2;
+    } else if (pool1._allConnections.length > 0) {
+      // If pool2 does not have connections, use pool1
+      console.warn('No connections in pool2. Falling back to pool1...');
+      return pool1;
+    } else {
+      console.error('No connections in both pool1 and pool2!');
+      return null;
+    }
+  } else {
+    // If year >= 1980, use pool3
+    if (pool3._allConnections.length > 0) {
+      // If pool3 has connections, use pool3
+      return pool3;
+    } else if (pool1._allConnections.length > 0) {
+      // If pool3 does not have connections, use pool1
+      console.warn('No connections in pool3. Falling back to pool1...');
+      return pool1;
+    } else {
+      console.error('No connections in both pool1 and pool3!');
+      return null;
+    }
+  }
+};
+
+// Set up the app to use EJS templating engine
   app.set("view engine", "ejs");
   
   // Set up middleware to parse request bodies as JSON
@@ -45,23 +113,26 @@ const connection = mysql.createConnection({
   app.use(express.urlencoded({ extended: true }));
   
   // Set up routes for the CRUD operations
-  
-  // Read all movies
-  app.get("/", (req, res) => {
-    const query = "SELECT * FROM nodepadawan";
-    connection.query(query, (err, results) => {
-      if (err) {
-        console.log("Error retrieving movies:", err);
-        return;
-      }
-  
-      res.render("index", { movies: results });
-    });
+
+// Read all movies
+app.get("/", (req, res) => {
+  const query = "SELECT * FROM nodepadawan";
+  const connection = choosePool(undefined); // Pass undefined to choosePool to use pool1 by default
+  connection.query(query, (err, results) => {
+    if (err) {
+      console.log("Error retrieving movies:", err);
+      return;
+    }
+
+    res.render("index", { movies: results });
   });
+});
+
   //search route
   app.post('/search', (req, res) => {
     const query = 'SELECT * FROM nodepadawan WHERE title LIKE ? OR genre LIKE ? OR director LIKE ? OR actor LIKE ? OR year LIKE ?';
     const searchQuery = `%${req.body.query}%`;
+    const connection = choosePool(undefined); // Pass undefined to choosePool to use pool1 by default
     connection.query(query, [searchQuery, searchQuery, searchQuery, searchQuery, searchQuery], (err, results) => {
       if (err) {
         console.log('Error searching movies:', err);
@@ -74,6 +145,7 @@ const connection = mysql.createConnection({
   // Create a new movie
   app.post('/addmovie', (req, res) => {
     const { title, genre, director, actor, year } = req.body;
+    const connection = choosePool(undefined); // Pass undefined to choosePool to use pool1 by default
     const query = 'INSERT INTO nodepadawan (title, genre, director, actor, year) VALUES (?, ?, ?, ?, ?)';
     connection.query(query, [title, genre, director, actor, year], (err, result) => {
       if (err) {
@@ -86,6 +158,7 @@ const connection = mysql.createConnection({
   });
   app.post("/movies", (req, res) => {
     const { title, director, year } = req.body;
+    const connection = choosePool(undefined); // Pass undefined to choosePool to use pool1 by default
     const query = "INSERT INTO nodepadawan (title, director, year) VALUES (?, ?, ?)";
     connection.query(query, [title, director, year], (err, result) => {
       if (err) {
@@ -101,6 +174,7 @@ const connection = mysql.createConnection({
   // Read a single movie
   app.get("/movies/:id", (req, res) => {
     const { id } = req.params;
+    const connection = choosePool(undefined); // Pass undefined to choosePool to use pool1 by default
     const query = "SELECT * FROM nodepadawan WHERE id = ?";
     connection.query(query, [id], (err, result) => {
       if (err) {
@@ -114,6 +188,7 @@ const connection = mysql.createConnection({
   // Update a movie
   app.put("/movies/:id", (req, res) => {
     const { id } = req.params;
+    const connection = choosePool(undefined); // Pass undefined to choosePool to use pool1 by default
     const { title, director, year } = req.body;
     const query = "UPDATE nodepadawan SET title = ?, director = ?, year = ? WHERE id = ?";
     connection.query(query, [title, director, year, id], (err, result) => {
@@ -129,6 +204,7 @@ const connection = mysql.createConnection({
   // Delete a movie
   app.delete("/movies/:id", (req, res) => {
     const { id } = req.params;
+    const connection = choosePool(undefined); // Pass undefined to choosePool to use pool1 by default
     const query = "DELETE FROM nodepadawan WHERE id = ?";
     connection.query(query, [id], (err, result) => {
       if (err) {
@@ -195,7 +271,7 @@ app.get('/movies/new', (req, res) => {
     // Code to retrieve a single movie from the database and render the "edit.ejs" template
     const id = req.params.id;
     const sql = "SELECT * FROM nodepadawan WHERE id = ?";
-  
+    const connection = chooseConnection();
     connection.query(sql, [id], (err, results) => {
       if (err) throw err;
   
@@ -209,7 +285,7 @@ app.put('/movies/:id', (req, res) => {
     const id = req.params.id;
     const { title, director, year, actors } = req.body;
     const sql = "UPDATE nodepadawan SET title = ?, director = ?, year = ?, actors = ? WHERE id = ?";
-  
+    const connection = chooseConnection();
     connection.query(sql, [title, director, year, actors, id], (err, results) => {
       if (err) throw err;
   
@@ -221,7 +297,7 @@ app.put('/movies/:id', (req, res) => {
   app.delete('/movies/:id', (req, res) => {
     const id = req.params.id;
     const sql = "DELETE FROM nodepadawan WHERE id = ?";
-  
+    const connection = chooseConnection();
     connection.query(sql, [id], (err, results) => {
       if (err) throw err;
   
