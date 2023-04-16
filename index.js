@@ -95,6 +95,7 @@ const connection = mysql.createConnection({
       res.redirect('/');
     });
   });
+  
   app.post("/movies", (req, res) => {
     const { title, director, year } = req.body;
     const query = "INSERT INTO nodepadawan (title, director, year) VALUES (?, ?, ?)";
@@ -125,9 +126,9 @@ const connection = mysql.createConnection({
   // Update a movie
   app.put("/movies/:id", (req, res) => {
     const { id } = req.params;
-    const { title, director, year } = req.body;
-    const query = "UPDATE nodepadawan SET title = ?, director = ?, year = ? WHERE id = ?";
-    connection.query(query, [title, director, year, id], (err, result) => {
+    const { title, genre, director, actor, year } = req.body;
+    const query = "UPDATE nodepadawan SET title = ?, genre = ?, director = ?, actor = ?, year = ? WHERE id = ?";
+    connection.query(query, [title, genre, director, actor, year, id], (err, result) => {
       if (err) {
         console.log("Error updating movie:", err);
         return;
@@ -150,6 +151,7 @@ const connection = mysql.createConnection({
       res.redirect("/");
     });
   });
+
 // CRUD ROUTES
 // Route to display all movies
 app.get('/movies', (req, res) => {
@@ -214,32 +216,6 @@ app.get('/movies/new', (req, res) => {
       res.render('edit', { movie });
     });
   });
-  
-// Route to handle updating a movie
-app.put('/movies/:id', (req, res) => {
-    const id = req.params.id;
-    const { title, director, year, actors } = req.body;
-    const sql = "UPDATE nodepadawan SET title = ?, director = ?, year = ?, actors = ? WHERE id = ?";
-  
-    connection.query(sql, [title, director, year, actors, id], (err, results) => {
-      if (err) throw err;
-  
-      res.redirect(`/movies/${id}`);
-    });
-  });
-  
-  // Route to handle deleting a movie
-  app.delete('/movies/:id', (req, res) => {
-    const id = req.params.id;
-    const sql = "DELETE FROM nodepadawan WHERE id = ?";
-  
-    connection.query(sql, [id], (err, results) => {
-      if (err) throw err;
-  
-      res.redirect('/movies');
-    });
-  });
-  
 
 app.listen(3000, () => {
     console.log('Server started on port 3000');
