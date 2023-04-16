@@ -5,6 +5,7 @@ const http = require('http');
 const path = require('path');
 
 
+
 /*require ('express-ws')(app);
 
 //web socket endpoint
@@ -18,6 +19,11 @@ app.ws('/ws', function(ws, req) {
 
 const bodyParser = require("body-parser");
 const app = express();
+
+const port = process.env.PORT || 5000;
+const server = http.createServer(app);
+
+server.listen(port, () => console.log(`Listening on port ${port}`));
 
 
 //app.use(express.static(path.join(__dirname, '/index.html')));
